@@ -3,11 +3,12 @@ import { getRedirectResult } from "firebase/auth";
 import {
   auth,
   siginWithGooglePopup,
-  signinWithGoogleRedirect,
+  //signinWithGoogleRedirect,
   createUserDocumentFromAuth,
 } from "../../utils/firebase/firebase.utils";
 
 import SignUpForm from "../../components/sign-up-form/sign-up-form.component";
+import Button from "../../components/button/button.component";
 
 const SignIn = () => {
   useEffect(() => {
@@ -29,7 +30,9 @@ const SignIn = () => {
   return (
     <div>
       <h1>Sign In</h1>
-      <button onClick={logGoogleUser}>Sign in with Google Popup</button>
+      <Button buttonType="google" buttonOptions={{ onClick: logGoogleUser }}>
+        Sign in with Google Popup
+      </Button>
       <SignUpForm />
 
       {/* <button onClick={signinWithGoogleRedirect}>

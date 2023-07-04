@@ -6,9 +6,12 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+//interface layer functions
 
 //getDoc - get document data
 //setDoc - set document data to set data
@@ -93,3 +96,9 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 
   return await signInWithEmailAndPassword(auth, email, password);
 };
+
+export const signOutUser = async () => await signOut(auth);
+
+//open listener for auth state changes, after auth state change, callback is then invoked
+export const onAuthStateChangedListener = (callback) =>
+  onAuthStateChanged(auth, callback); //returns function to unsubscribe

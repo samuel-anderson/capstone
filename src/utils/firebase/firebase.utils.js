@@ -10,7 +10,16 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  collection,
+  writeBatch,
+  query,
+  getDocs,
+} from "firebase/firestore";
 //interface layer functions
 
 //getDoc - get document data
@@ -54,6 +63,38 @@ export const signinWithGoogleRedirect = () =>
 /**********Google *****************/
 
 export const db = getFirestore();
+
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  jsonObjectsToAdd,
+  field
+) => {
+  const collectionRef = collection(db, collectionKey);
+  const batch = writeBatch(db);
+
+  jsonObjectsToAdd.forEach((jsonObject) => {
+    const docRef = doc(collectionRef, jsonObject[field].toLowerCase());
+    batch.set(docRef, jsonObject);
+  });
+
+  await batch.commit();
+  console.log("done");
+};
+
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, "categories");
+  const q = query(collectionRef);
+
+  const querySnapshot = await getDocs(q);
+
+  const categoryMap = querySnapshot.docs.reduce((accumalator, docSnapshot) => {
+    const { title, items } = docSnapshot.data();
+    accumalator[title.toLowerCase()] = items;
+    return accumalator;
+  }, {});
+
+  return categoryMap;
+};
 
 //get data from authentication service and store data
 export const createUserDocumentFromAuth = async (

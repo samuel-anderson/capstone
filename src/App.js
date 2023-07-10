@@ -12,7 +12,7 @@ const App = () => {
         {/* Index - Determines if the route is an index route. Index routes render into their 
         parent's Outlet at their parent's URL (like a default child route). */}
         <Route index element={<Home />} />
-        <Route path="shop" element={<Shop />} />
+        <Route path="shop/*" element={<Shop />} />
         <Route path="auth" element={<Authentication />} />
         <Route path="checkout" element={<Checkout />} />
       </Route>

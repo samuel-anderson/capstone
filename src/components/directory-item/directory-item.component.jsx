@@ -9,11 +9,7 @@ import {
 const DirectoryItem = ({ category: { title, imageUrl, id } }) => {
   return (
     <DirectoryItemContainer key={id}>
-      <BackgroundImage
-        style={{
-          backgroundImage: `url(${imageUrl})`,
-        }}
-      />
+      <BackgroundImage imageUrl={imageUrl} />
       <Body>
         <h2>{title}</h2>
         <LinkWrapper>

@@ -1,6 +1,14 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+export const BackgroundImage = styled.div`
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-image: ${({ imageUrl }) => `url(${imageUrl})`};
+`;
+
 export const DirectoryItemContainer = styled.div`
   min-width: 30%;
   height: 240px;
@@ -36,13 +44,6 @@ export const DirectoryItemContainer = styled.div`
   &:last-child {
     margin-left: 7.5px;
   }
-`;
-
-export const BackgroundImage = styled.div`
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
 `;
 
 export const Body = styled.div`

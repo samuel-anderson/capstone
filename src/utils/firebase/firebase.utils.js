@@ -58,7 +58,8 @@ googleProvider.setCustomParameters({
 export const auth = getAuth(); //singleton, authentication memory base
 
 /**********Google *****************/
-export const siginWithGooglePopup = () => signInWithPopup(auth, googleProvider);
+export const signInWithGooglePopup = () =>
+  signInWithPopup(auth, googleProvider);
 export const signinWithGoogleRedirect = () =>
   signInWithRedirect(auth, googleProvider);
 /**********Google *****************/
@@ -127,7 +128,8 @@ export const createUserDocumentFromAuth = async (
     }
   }
 
-  return userDocRef;
+  //return userDocRef;
+  return userSnapshot;
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -147,3 +149,16 @@ export const signOutUser = async () => await signOut(auth);
 //open listener for auth state changes, after auth state change, callback is then invoked
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback); //returns function to unsubscribe
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (userAuth) => {
+        unsubscribe();
+        resolve(userAuth);
+      },
+      reject
+    );
+  });
+};

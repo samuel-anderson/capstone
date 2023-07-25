@@ -7,23 +7,33 @@ import Navigation from "./routes/navigation/navigation.component";
 import Authentication from "./routes/authentication/authentication.component";
 import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
-import { checkUserSession } from "./store/user/user.action";
+// import { checkUserSession } from "./store/user/user.action";
+import { checkUserSession } from "./store/user/user.slice";
+// import {
+//   onAuthStateChangedListener,
+//   createUserDocumentFromAuth,
+// } from "./utils/firebase/firebase.utils";
 
 const App = () => {
   const dispatch = useDispatch(); //won't change
 
   useEffect(() => {
     dispatch(checkUserSession());
-    /*
-    const unsubscribe = onAuthStateChangedListener((user) => {
-      if (user) {
-        createUserDocumentFromAuth(user);
-      }
 
-      dispatch(setCurrentUser(user)); //null or user object
-    });
-    return unsubscribe; //run on unmount, to prevent memory leak
-    */
+    // const unsubscribe = onAuthStateChangedListener((user) => {
+    //   if (user) {
+    //     createUserDocumentFromAuth(user);
+    //   }
+    //   const pickedUser =
+    //     user &&
+    //     (({ accessToken, email }) =>
+    //       ({
+    //         accessToken,
+    //         email,
+    //       }(user)));
+    //   dispatch(setCurrentUser(pickedUser)); //null or user object
+    // });
+    // return unsubscribe; //run on unmount, to prevent memory leak
   }, [dispatch]);
 
   return (

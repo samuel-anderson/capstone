@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 
-import { signUpStart } from "../../store/user/user.action";
+import { signUpStart } from "../../store/user/user.slice";
 
 // import {
 //   createAuthUserWithEmailAndPassword,
@@ -47,7 +47,7 @@ const SignUpForm = () => {
 
       // await createUserDocumentFromAuth(user, { displayName });
 
-      dispatch(signUpStart(email, password, displayName));
+      dispatch(signUpStart({ email, password, displayName }));
       resetFormFields();
     } catch (error) {
       if (error.code === "auth/email-already-in-use")

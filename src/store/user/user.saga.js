@@ -1,13 +1,13 @@
 import { takeLatest, all, put, call } from "redux-saga/effects";
-import { USER_ACTION_TYPES } from "./user.types";
-import {
-  signInSuccess,
-  signInFailed,
-  signUpSuccess,
-  signUpFailed,
-  signOutSuccess,
-  signOutFailed,
-} from "./user.action";
+// import { USER_ACTION_TYPES } from "./user.types";
+// import {
+//   signInSuccess,
+//   signInFailed,
+//   signUpSuccess,
+//   signUpFailed,
+//   signOutSuccess,
+//   signOutFailed,
+// } from "./user.action";
 import {
   createUserDocumentFromAuth,
   getCurrentUser,
@@ -16,6 +16,19 @@ import {
   createAuthUserWithEmailAndPassword,
   signOutUser,
 } from "../../utils/firebase/firebase.utils";
+import {
+  checkUserSession,
+  emailSignInStart,
+  googleSignInStart,
+  signUpStart,
+  signInSuccess,
+  signInFailed,
+  signUpSuccess,
+  signUpFailed,
+  signOutStart,
+  signOutSuccess,
+  signOutFailed,
+} from "./user.slice";
 
 export function* getSnapshotFromUserAuth(userAuth, additionalDetails) {
   try {
@@ -92,27 +105,27 @@ export function* signInAfterSignUp({ payload: { user, additionalDetails } }) {
 }
 
 export function* onEmailSignInStart() {
-  yield takeLatest(USER_ACTION_TYPES.EMAIL_SIGN_IN_START, signInWithEmail);
+  yield takeLatest(emailSignInStart.type, signInWithEmail);
 }
 
 export function* onGoogleSignInStart() {
-  yield takeLatest(USER_ACTION_TYPES.GOOGLE_SIGN_IN_START, signInWithGoogle);
+  yield takeLatest(googleSignInStart.type, signInWithGoogle);
 }
 
 export function* onCheckUserSession() {
-  yield takeLatest(USER_ACTION_TYPES.CHECK_USER_SESSION, isUserAuthenticated);
+  yield takeLatest(checkUserSession.type, isUserAuthenticated);
 }
 
 export function* onSignUpStart() {
-  yield takeLatest(USER_ACTION_TYPES.SIGN_UP_START, signUp);
+  yield takeLatest(signUpStart.type, signUp);
 }
 
 export function* onSignUpSuccess() {
-  yield takeLatest(USER_ACTION_TYPES.SIGN_UP_SUCCESS, signInAfterSignUp);
+  yield takeLatest(signUpSuccess.type, signInAfterSignUp);
 }
 
 export function* onSignOutStart() {
-  yield takeLatest(USER_ACTION_TYPES.SIGN_OUT_START, signOut);
+  yield takeLatest(signOutStart.type, signOut);
 }
 
 export function* userSagas() {

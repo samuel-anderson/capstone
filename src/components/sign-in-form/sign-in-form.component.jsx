@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import {
   googleSignInStart,
   emailSignInStart,
-} from "../../store/user/user.action";
+} from "../../store/user/user.slice";
 
 import { SignInContainer, ButtonsContainer } from "./sign-in-form.jsx";
 
@@ -28,7 +28,7 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      dispatch(emailSignInStart(email, password));
+      dispatch(emailSignInStart({ email, password }));
       resetFormFields();
     } catch (error) {
       switch (error.code) {

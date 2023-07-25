@@ -6,7 +6,8 @@ import {
   fetchCategoriesFailure,
 } from "./categories.action";
 
-import { CATEGORIES_ACTION_TYPES } from "./categories.types";
+// import { CATEGORIES_ACTION_TYPES } from "./categories.types";
+import { fetchCategoriesStart } from "./categories.slice";
 
 export function* fetchCategoriesAsync() {
   try {
@@ -18,10 +19,7 @@ export function* fetchCategoriesAsync() {
 }
 
 export function* onFetchcategories() {
-  yield takeLatest(
-    CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_START,
-    fetchCategoriesAsync
-  ); //receive action
+  yield takeLatest(fetchCategoriesStart.type, fetchCategoriesAsync); //receive action
 }
 
 export function* categoriesSaga() {

@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-// import { persistStore, persistReducer } from "redux-persist";
-// import storage from "redux-persist/lib/storage";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 // import { loggerMiddleware } from "./middleware/logger";
 import { logger } from "redux-logger";
 import { rootReducer } from "./root-reducer";
@@ -16,15 +16,15 @@ import { rootSaga } from "./root-saga";
 // //sequence of curried functions
 // //something that wants to generate side effects with actions before hitting reducers
 
-// const persistConfig = {
-//   key: "root", //everything
-//   storage, //shorthand cast variable as key name
-//   whitelist: ["cart"],
-// };
+const persistConfig = {
+  key: "root", //everything
+  storage, //shorthand cast variable as key name
+  whitelist: ["cart"],
+};
 
 const sagaMiddleware = createSagaMiddleware();
 
-// const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 //runs before actions hit reducers, like enhancers
 const middleWares = [process.env.NODE_ENV === "development" && logger].filter(
@@ -40,8 +40,9 @@ const middleWares = [process.env.NODE_ENV === "development" && logger].filter(
 // const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
 
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
   //middleware: middleWares, //to replace default middleware which includes redux-thunk
+  devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, //or you can customize incoming object (pickedUser)
@@ -51,4 +52,4 @@ export const store = configureStore({
 
 sagaMiddleware.run(rootSaga); //unique to saga's configuration and instantiation
 
-// export const persistor = persistStore(store);
+export const persistor = persistStore(store);

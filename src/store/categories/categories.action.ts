@@ -1,4 +1,5 @@
 import { CATEGORIES_ACTION_TYPES, Category } from "./categories.types";
+import { withMathcerAC } from "../../utils/reducer/reducer.utils";
 import {
   createAction,
   Action,
@@ -16,24 +17,27 @@ export type FetchCategoriesFailure = ActionWithPayload<
   Error
 >;
 
-export type CategoryAction =
-  | FetchCategoriesStart
-  | FetchCategoriesSuccess
-  | FetchCategoriesFailure;
+// export type CategoryAction =
+//   | FetchCategoriesStart
+//   | FetchCategoriesSuccess
+//   | FetchCategoriesFailure;
 
-export const fetchCategoriesStart = () =>
-  createAction(CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_START);
+export const fetchCategoriesStart = withMathcerAC(() =>
+  createAction(CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_START)
+);
 
-export const fetchCategoriesSuccess = (
-  categoriesArray: Category[]
-): FetchCategoriesSuccess =>
-  createAction(
-    CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_SUCCESS,
-    categoriesArray
-  );
+export const fetchCategoriesSuccess = withMathcerAC(
+  (categoriesArray: Category[]): FetchCategoriesSuccess =>
+    createAction(
+      CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_SUCCESS,
+      categoriesArray
+    )
+);
 
-export const fetchCategoriesFailure = (error: Error): FetchCategoriesFailure =>
-  createAction(CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_FAILED, error);
+export const fetchCategoriesFailure = withMathcerAC(
+  (error: Error): FetchCategoriesFailure =>
+    createAction(CATEGORIES_ACTION_TYPES.FETCH_CATEGORIES_FAILED, error)
+);
 
 //USED WITH THUNKS
 // export const fetchCategoriesAsync = () => async (dispatch) => {

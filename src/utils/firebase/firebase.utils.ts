@@ -8,6 +8,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  User,
+  NextOrObserver,
 } from "firebase/auth";
 
 import {
@@ -19,7 +21,10 @@ import {
   writeBatch,
   query,
   getDocs,
+  QueryDocumentSnapshot,
 } from "firebase/firestore";
+
+import { Category } from "../../store/categories/categories.types";
 //interface layer functions
 
 //getDoc - get document data
@@ -66,16 +71,19 @@ export const signinWithGoogleRedirect = () =>
 
 export const db = getFirestore();
 
-export const addCollectionAndDocuments = async (
-  collectionKey,
-  jsonObjectsToAdd,
-  field
-) => {
+export type ObejctToAdd = {
+  title: string;
+};
+
+export const addCollectionAndDocuments = async <T extends ObejctToAdd>(
+  collectionKey: string,
+  jsonObjectsToAdd: T[]
+): Promise<void> => {
   const collectionRef = collection(db, collectionKey);
   const batch = writeBatch(db);
 
   jsonObjectsToAdd.forEach((jsonObject) => {
-    const docRef = doc(collectionRef, jsonObject[field].toLowerCase());
+    const docRef = doc(collectionRef, jsonObject.title.toLowerCase());
     batch.set(docRef, jsonObject);
   });
 
@@ -83,14 +91,16 @@ export const addCollectionAndDocuments = async (
   console.log("done");
 };
 
-export const getCategoriesAndDocuments = async () => {
+export const getCategoriesAndDocuments = async (): Promise<Category[]> => {
   const collectionRef = collection(db, "categories");
   const q = query(collectionRef);
 
   //for testing error
   //await Promise.reject(new Error('whoop we received an error));
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
+  return querySnapshot.docs.map(
+    (docSnapshot) => docSnapshot.data() as Category
+  );
 
   // const categoryMap = querySnapshot.docs.reduce((accumalator, docSnapshot) => {
   //   const { title, items } = docSnapshot.data();
@@ -101,11 +111,20 @@ export const getCategoriesAndDocuments = async () => {
   // return categoryMap;
 };
 
+export type AdditionalInformation = {
+  displayName?: string;
+};
+
+export type UserData = {
+  createdAt: Date;
+  displayName: string;
+  email: string;
+};
 //get data from authentication service and store data
 export const createUserDocumentFromAuth = async (
-  userAuth,
-  additionalInformation = {}
-) => {
+  userAuth: User,
+  additionalInformation = {} as AdditionalInformation
+): Promise<void | QueryDocumentSnapshot<UserData>> => {
   if (!userAuth) return;
 
   //does user document reference exist
@@ -124,21 +143,27 @@ export const createUserDocumentFromAuth = async (
         ...additionalInformation,
       });
     } catch (error) {
-      console.log("error creating the user", error.message);
+      console.log("error creating the user", error);
     }
   }
 
   //return userDocRef;
-  return userSnapshot;
+  return userSnapshot as QueryDocumentSnapshot<UserData>;
 };
 
-export const createAuthUserWithEmailAndPassword = async (email, password) => {
+export const createAuthUserWithEmailAndPassword = async (
+  email: string,
+  password: string
+) => {
   if (!email || !password) return;
 
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
-export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+export const signInAuthUserWithEmailAndPassword = async (
+  email: string,
+  password: string
+) => {
   if (!email || !password) return;
 
   return await signInWithEmailAndPassword(auth, email, password);
@@ -147,10 +172,10 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 export const signOutUser = async () => await signOut(auth);
 
 //open listener for auth state changes, after auth state change, callback is then invoked
-export const onAuthStateChangedListener = (callback) =>
+export const onAuthStateChangedListener = (callback: NextOrObserver<User>) =>
   onAuthStateChanged(auth, callback); //returns function to unsubscribe
 
-export const getCurrentUser = () => {
+export const getCurrentUser = (): Promise<User | null> => {
   return new Promise((resolve, reject) => {
     const unsubscribe = onAuthStateChanged(
       auth,
